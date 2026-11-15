@@ -1,3 +1,22 @@
+server:
+  port: 8082
+
 spring:
   application:
-    name: apigateway
+    name: api-gateway
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: flow-manager-route
+              uri: lb://flowmanager
+              predicates:
+                - Path=/api/v1/conversions/**
+
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
