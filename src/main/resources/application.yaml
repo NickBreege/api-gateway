@@ -4,6 +4,27 @@ server:
 spring:
   application:
     name: api-gateway
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8083/realms/flowmanager-realm
+      client:
+        registration:
+          keycloak:
+            client-id: api-gateway
+            client-secret: AlChxlJOcDnSWfRkGh6nvhHe8PhPvvs040AtXRPrJyVExjghSaVEkqqQIfD54D2jXRHHYjshySwJEp2XpgWK1J
+            scope:
+              - openid
+              - profile
+              - email
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8083/realms/flowmanager-realm
+
   cloud:
     gateway:
       server:
@@ -13,6 +34,8 @@ spring:
               uri: lb://flowmanager
               predicates:
                 - Path=/api/v1/conversions/**
+              filters:
+                - TokenRelay=
 
 eureka:
   instance:
